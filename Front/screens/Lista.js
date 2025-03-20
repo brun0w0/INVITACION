@@ -12,7 +12,7 @@ export default function Lista() {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedInvitado, setSelectedInvitado] = useState(null);
     const [searchText, setSearchText] = useState('');
-    const itemsPerPage = 5;
+    const itemsPerPage = 4;
     const [acompanantes, setAcompanantes] = useState([]);
 
 
@@ -88,16 +88,13 @@ export default function Lista() {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <Text style={styles.title}>Lista de Invitados ({invitados.length}) </Text>
+                        <Text style={styles.title}>Lista de Invitados ({invitados.length})</Text>
+
                         <Text style={styles.subtitle}>
                             <Text style={{ color: '#FE6B8B' }}>Ve</Text>, <Text style={{ color: '#ba9f2d' }}>edita</Text> o <Text style={{ color: '#d12c2c' }} >elimina</Text> invitados.
                         </Text>
 
                         <View style={styles.searchContainer}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9e9e9e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search">
-                                <circle cx="11" cy="11" r="8" />
-                                <path d="m21 21-4.3-4.3" />
-                            </svg>
                             <TextInput
                                 style={styles.searchInput}
                                 placeholder="Buscar por nombre..."
@@ -107,34 +104,35 @@ export default function Lista() {
                             />
                         </View>
                     </View>
+
                     {loading ? (
                         <ActivityIndicator size="large" color="#FE6B8B" />
                     ) : filteredInvitados.length === 0 ? (
                         <Text style={styles.noResultsText}>No se encontraron invitados.</Text>
                     ) : (
                         <>
-                                    <FlatList
-                                        data={invitadosPaginados}
-                                        keyExtractor={(item) => item.id.toString()}
-                                        renderItem={({ item }) => (
-                                            <View style={styles.card}>
-                                                <View style={styles.cardContent}>
-                                                    <View>
-                                                        <Text style={styles.nombre}>👤 {item.nombre}</Text>
-                                                        <Text style={styles.telefono}>📱 {item.telefono}</Text>
-                                                    </View>
-                                                    <TouchableOpacity
-                                                        style={styles.detailsButton}
-                                                        onPress={() => setSelectedInvitado(item)}
-                                                    >
-                                                        <Text style={styles.detailsButtonText}>Más detalles</Text>
-                                                    </TouchableOpacity>
-                                                </View>
+                            <FlatList
+                                data={invitadosPaginados}
+                                keyExtractor={(item) => item.id.toString()}
+                                renderItem={({ item }) => (
+                                    <View style={styles.card}>
+                                        <View style={styles.cardContent}>
+                                            <View>
+                                                <Text style={styles.nombre}>👤 {item.nombre}</Text>
+                                                <Text style={styles.telefono}>📱 {item.telefono}</Text>
                                             </View>
-                                        )}
-                                        contentContainerStyle={styles.listContent}
-                                        showsVerticalScrollIndicator={true}
-                                    />
+                                            <TouchableOpacity
+                                                style={styles.detailsButton}
+                                                onPress={() => setSelectedInvitado(item)}
+                                            >
+                                                <Text style={styles.detailsButtonText}>Más detalles</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                )}
+                                contentContainerStyle={styles.listContent}
+                                showsVerticalScrollIndicator={true}
+                            />
 
 
                             <View style={styles.paginationContainer}>
@@ -177,10 +175,6 @@ export default function Lista() {
 
                                     <View style={styles.pastelBackground}>
                                         <Text style={styles.modalText}>📱 Número celular: {selectedInvitado.telefono}</Text>
-                                    </View>
-
-                                    <View style={styles.pastelBackground}>
-                                        <Text style={styles.modalText}>👥 Total de asistentes: {selectedInvitado.asistentes || '0'}</Text>
                                     </View>
 
                                     <View style={styles.viewAcompanante}>
@@ -230,9 +224,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'center', // Alinear el contenido en el centro
         marginBottom: 20,
     },
     searchContainer: {
@@ -243,7 +235,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc',
         paddingHorizontal: 10,
-        width: '15%',
+        width: '100%',
+        marginTop: 10,
     },
     searchInput: {
         flex: 1,
@@ -254,17 +247,18 @@ const styles = StyleSheet.create({
         outlineWidth: 0,
     },
     title: {
-        fontSize: 24,
+        fontSize: 34,
         fontWeight: 'bold',
         color: '#333',
         textAlign: 'center',
     },
+
     subtitle: {
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: '400',
         color: '#333',
+        marginTop: 10,
         textAlign: 'center',
-
     },
     listContent: {
         flexGrow: 1,
@@ -399,12 +393,12 @@ const styles = StyleSheet.create({
     textoAcompanante: {
         marginLeft: 28,
         fontSize: 18,
-        color: '#333', 
+        color: '#333',
     },
     pastelBackground: {
         backgroundColor: '#f2f2f2',
-        padding: 10, 
-        borderRadius: 8, 
-        marginBottom: 10, 
+        padding: 10,
+        borderRadius: 8,
+        marginBottom: 10,
     },
 });

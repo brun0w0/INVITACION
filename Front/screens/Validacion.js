@@ -7,12 +7,14 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 export default function Validacion() {
     const [nombre, setNombre] = useState('');
     const [numeroCelular, setNumeroCelular] = useState('');
+    const [asistentes, setAsistentes] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false); 
     const [errorMessage, setErrorMessage] = useState('');
 
     const navigation = useNavigation();
+    
 
     const handleNumeroCelularChange = (text) => {
         if (text.length <= 10) {
@@ -26,38 +28,39 @@ export default function Validacion() {
     const handleSiguiente = async () => {
         if (loading) return;
 
-        if (!nombre.trim() || !numeroCelular.trim()) {
+        if (!nombre.trim() || !numeroCelular.trim() || !asistentes.trim()) {
             setError('Es necesario completar todos los campos.');
             return;
         }
 
         if (!/^\d+$/.test(numeroCelular) || numeroCelular.length !== 10) {
-            setError('Ingresa un número válido.');
+            setError('Ingresa un número celular válido.');
             return;
         }
 
         setLoading(true);
         try {
-            console.log('Enviando datos:', { nombre, numeroCelular });
-            const response = await registroInvitado(nombre, numeroCelular);
+            console.log('Enviando datos:', { nombre, numeroCelular, asistentes });
+
+            const response = await registroInvitado(nombre, numeroCelular, parseInt(asistentes, 10));
             console.log('Respuesta de la API:', response);
-
-            const invitadoId = response.id;
-            console.log('ID del invitado:', invitadoId);
-
             Alert.alert('Registro correcto', 'Tu registro se ha completado exitosamente.');
             setNombre('');
             setNumeroCelular('');
+            setAsistentes('');
 
-            navigation.navigate('RegistroAcompanante', { invitadoId, nombre });
+            navigation.navigate('Completado');
+            
         } catch (error) {
             console.error('Error en la solicitud:', error);
-            setErrorMessage('Ocurrió un error al registrarte. Intenta más tarde.');
+            setErrorMessage('Ocurrió un error al registrar. Intenta más tarde.');
             setShowErrorAlert(true);
         } finally {
             setLoading(false);
         }
     };
+
+
 
     return (
         <KeyboardAvoidingView
@@ -65,9 +68,9 @@ export default function Validacion() {
             style={styles.container}
         >
             <View style={styles.cardcontainer}>
-                <Text style={styles.titulo}>¡Primero lo primero!</Text>
+                <Text style={styles.titulo}>Agrega un invitado a tu fiesta</Text>
                 <Text style={styles.texto}>
-                    Completa los campos para poder terminar tu registro:
+                    Completa los campos para poder agregar a tu invitado:
                 </Text>
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -86,6 +89,14 @@ export default function Validacion() {
                         value={numeroCelular}
                         onChangeText={handleNumeroCelularChange}
                         maxLength={10}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Número de acompañantes'
+                        placeholderTextColor='#d1d1d1'
+                        keyboardType='numeric'
+                        value={asistentes}
+                        onChangeText={setAsistentes}
                     />
                     {error ? <Text style={styles.errorText}>{error}</Text> : null}
                     <TouchableOpacity
@@ -110,7 +121,7 @@ export default function Validacion() {
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={false}
                 showConfirmButton={true}
-                confirmText="OK"
+                confirmText="Aceptar"
                 confirmButtonColor="#FE6B8B"
                 onConfirmPressed={() => setShowErrorAlert(false)}
             />

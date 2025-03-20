@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Animated, KeyboardAvoidingView, Platform } from 'react-native';
 
-export default function PaginaFinal() {
+export default function PaginaFinal2() {
     const [progress] = useState(new Animated.Value(100));
 
     useEffect(() => {
         Animated.timing(progress, {
             toValue: 0,
-            duration: 5000,
+            duration: 7000,
             useNativeDriver: false,
         }).start();
 
 
         const timer = setTimeout(() => {
             location.reload();
-        }, 5000);
-
+        }, 7000);
         return () => clearTimeout(timer);
     }, []);
 
@@ -25,12 +24,12 @@ export default function PaginaFinal() {
             style={styles.container}
         >
             <View style={styles.cardcontainer}>
-                <Text style={styles.titulo}>¡Todo Listo!</Text>
+                <Text style={styles.titulo}>¡Felicidades!</Text>
                 <Text style={styles.texto}>
-                    Hecho, se ha registrado el invitado correctamente.
+                    Has confirmado tu asistencia y se han agregado tus acompañantes con éxito.
                 </Text>
                 <Text style={styles.texto}>
-                    ¡Esperemos y si venga!             
+                    ¡Te esperamos en la fiesta! Y que no se te olvide el regalo.         
                 </Text>
             </View>
 

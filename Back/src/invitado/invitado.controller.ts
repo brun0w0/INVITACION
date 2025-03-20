@@ -17,6 +17,7 @@ export class InvitadoController {
     @ApiResponse({ status: 400, description: 'El numero o nombre ya existe' })
     async create(@Body() createInvitadoDto: CreateInvitadoDto) {
         try {
+            createInvitadoDto.asistentes = Number(createInvitadoDto.asistentes);
             return await this.invitadoService.create(createInvitadoDto);
         } catch (error) {
             if (error instanceof BadRequestException) {
@@ -26,6 +27,7 @@ export class InvitadoController {
         }
     }
 
+
     @Get()
     @ApiOperation({ summary: 'Obtener todos los invitados' })
     @ApiResponse({ status: 200, description: 'OK' })
@@ -34,6 +36,7 @@ export class InvitadoController {
     }
 
     @Get(':id')
+    @ApiOperation({ summary: 'Obtener un invitado por su ID' })
     async findOne(@Param('id') id: number) {
         const invitado = await this.invitadoService.findOne(+id);
         if (!invitado) {
@@ -41,6 +44,20 @@ export class InvitadoController {
         }
         return invitado;
     }
+
+    @Get('porNumero/:telefono')
+    @ApiOperation({ summary: 'Obtener ID por su numero' })
+    @ApiResponse({ status: 200, description: 'Invitado encontrado' })
+    @ApiResponse({ status: 404, description: 'Invitado no encontrado' })
+    async findByNumero(@Param('telefono') telefono: string) {
+        try {
+            const id = await this.invitadoService.findByNumero(telefono);
+            return { id };
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
+    }
+
 
     @Delete(':id')
     @ApiOperation({ summary: 'Eliminar un invitado con sus acompañantes' })

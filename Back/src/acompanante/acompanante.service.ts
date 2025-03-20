@@ -19,10 +19,6 @@ export class AcompananteService {
                 throw new NotFoundException("Invitado no encontrado");
             }
 
-            if (invitado.asistentes >= 4) {
-                throw new Error("El invitado ya tiene todos los acompañantes llenos");
-            }
-
             const nuevoAcompanante = await this.prisma.acompanante.create({
                 data: {
                     nombre: createAcompananteDto.nombre,

@@ -8,7 +8,7 @@ export class InvitadoService {
     constructor(private prisma: PrismaService) { }
 
     async create(createInvitadoDto: CreateInvitadoDto) {
-        const { nombre, telefono } = createInvitadoDto;
+        const { nombre, telefono, asistentes } = createInvitadoDto;
 
         const invitadoExistente = await this.prisma.invitado.findFirst({
             where: { telefono },
@@ -19,7 +19,7 @@ export class InvitadoService {
         }
 
         return this.prisma.invitado.create({
-            data: { nombre, telefono, asistentes: 1 },
+            data: { nombre, telefono, asistentes },
         });
     }
 
@@ -34,6 +34,21 @@ export class InvitadoService {
             asistentes: invitado.asistentes,
         }));
     }
+
+    async findByNumero(telefono: string) {
+        const asistente = await this.prisma.invitado.findFirst({
+            where: { telefono },
+            select: { id: true },
+        });
+
+        if (!asistente) {
+            throw new BadRequestException('No se encontro el invitado.');
+        }
+
+        return asistente.id;
+    }
+
+
 
     async findOne(id: number) {
         return this.prisma.invitado.findUnique({

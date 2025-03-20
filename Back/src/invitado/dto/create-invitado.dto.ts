@@ -6,4 +6,7 @@ export class CreateInvitadoDto {
 
     @ApiProperty({ example: "1234567890", description: "Telefono del invitado" })
     telefono: string;
+
+    @ApiProperty({ example: 4 , description: "Número de acompañantes" })
+    asistentes: number;
 }

@@ -1,97 +1,102 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Alert, ScrollView } from 'react-native';
 import { registrarAcompanante } from '../services/api';
 
-export default function RegistroAcompanante() {
-    const route = useRoute();
-    const navigation = useNavigation();
-    const { invitadoId } = route.params;
-    const nombre = route.params?.nombre || 'Tú';
-    const [acompanantes, setAcompanantes] = useState(['', '', '']);
+const RegistroAcompanante = ({ route, navigation }) => {
+    const { invitadoId, asistentes, nombre } = route.params;
+    console.log('Nombre recibido:', nombre);
+    console.log('Número de acompañantes:', asistentes);
+
+    const [listaAcompanantes, setListaAcompanantes] = useState([]);
+
+    useEffect(() => {
+        if (typeof asistentes === 'number' && asistentes > 0) {
+            setListaAcompanantes(Array.from({ length: asistentes }, () => ({ nombre: '' })));
+        }
+    }, [asistentes]);
+
+
     const [loading, setLoading] = useState(false);
 
+    const handleInputChange = (index, value) => {
+        const newAcompanantes = [...listaAcompanantes];
+        newAcompanantes[index].nombre = value;
+        setListaAcompanantes(newAcompanantes);
+    };
+
     const handleRegistro = async () => {
-        if (acompanantes.every((nombre) => !nombre.trim())) {
-            Alert.alert('Error', 'Ingresa por lo menos a un acompañante.');
+        if (listaAcompanantes.some(a => !a.nombre.trim())) {
+            Alert.alert('Error', 'Ingresa el nombre de todos los acompañantes');
             return;
         }
 
         setLoading(true);
         try {
-            for (const nombre of acompanantes) {
-                if (nombre.trim()) {
-                    console.log('Registrando acompañante:', { nombre, invitadoId });
-                    await registrarAcompanante({ nombre, invitadoId });
-                }
+            for (const asistente of listaAcompanantes) {
+                await registrarAcompanante({ nombre: asistente.nombre, invitadoId });
             }
-            Alert.alert('Éxito', 'Acompañantes registrados correctamente.');
-            navigation.navigate('Completado');
+            Alert.alert('Hecho', 'Se registraron los acompañantes.');
+            navigation.navigate('Confirmado');
         } catch (error) {
-            console.error('Error en handleRegistro:', error);
-            Alert.alert('Error', error.message || 'Ocurrió un error al registrar los acompañantes.');
+            Alert.alert('Error', error.message || 'Error al registrar acompañantes.');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleInputChange = (index, value) => {
-        const newAcompanantes = [...acompanantes];
-        newAcompanantes[index] = value;
-        setAcompanantes(newAcompanantes);
-    };
-
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}
+            style={{ flex: 1 }}
         >
-            <View style={styles.cardcontainer}>
-                <Text style={styles.titulo}>¡Estamos a pocos pasos!</Text>
-                <Text style={styles.texto}>
-                    Añade hasta 3 acompañantes. <span style={{ color: '#FE6B8B', fontWeight: 'bold' }} >Este apartado es opcional.</span>
-                </Text>
-                <Text style={styles.texto}>
-                    Si deseas puedes darle a <span style={{ color: '#4d4d4d', fontWeight: 'bold' }}>Omitir</span> sin agregar acompañantes.
-                </Text>
-                <View style={styles.inputContainer}>
-                    <View style={styles.inputRow}>
-                        <Text style={styles.label}>Tú</Text>
-                        <TextInput
-                            style={styles.inputTu}
-                            placeholder={nombre}
-                            placeholderTextColor="#d1d1d1"
-                            keyboardType="text"
-                            editable={false}
-                            aria-disabled
-                        />
-                    </View>
-                    {[0, 1, 2].map((index) => (
-                        <View style={styles.inputRow} key={index}>
-                            <Text style={styles.label}>{index + 1}.</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Nombre completo"
-                                placeholderTextColor="#d1d1d1"
-                                keyboardType="text"
-                                value={acompanantes[index]}
-                                onChangeText={(text) => handleInputChange(index, text)}
-                            />
+            <View style={{ flex: 1 }}>
+                <View style={styles.container}>
+                    <View style={styles.cardcontainer}>
+                        <Text style={styles.titulo}>¡Estamos a pocos pasos!</Text>
+                        <Text style={styles.texto}>
+                            Añade a tus acompañantes. <Text style={{ color: '#FE6B8B', fontWeight: 'bold' }}>Escribe sus nombres.</Text>
+                        </Text>
+                        <Text style={styles.texto}>
+                            Puedes añadir hasta <Text style={{ color: '#4d4d4d', fontWeight: 'bold' }}>{asistentes}</Text> acompañantes.
+                        </Text>
+                        <View style={styles.inputContainer}>
+                            <View style={styles.inputRow}>
+                                <Text style={styles.label}>Tú</Text>
+                                <TextInput
+                                    style={styles.inputTu}
+                                    placeholder={route.params.nombre || "Tu Nombre"}
+                                    placeholderTextColor="#d1d1d1"
+                                    keyboardType="text"
+                                    editable={false}
+                                    aria-disabled
+                                />
+                            </View>
+                            {listaAcompanantes.map((asistente, index) => (
+                                <View key={index} style={styles.inputRow}>
+                                    <Text style={styles.label}>{index + 1}</Text>
+                                    <TextInput
+                                        placeholder='Nombre completo'
+                                        placeholderTextColor={'#ffc4d1'}
+                                        value={asistente.nombre}
+                                        onChangeText={(value) => handleInputChange(index, value)}
+                                        style={styles.input}
+                                    />
+                                </View>
+                            ))}
+
+                            <View style={styles.botonesContainer}>
+                                <TouchableOpacity style={styles.boton} onPress={handleRegistro} disabled={loading}>
+                                    <Text style={styles.botonTexto}>{loading ? 'Registrando...' : 'Confirmar'}</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    ))}
-                    <View style={styles.botonesContainer}>
-                        <TouchableOpacity style={styles.boton} onPress={handleRegistro} disabled={loading}>
-                            <Text style={styles.botonTexto}>{loading ? 'Registrando...' : 'Confirmar'}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.omitir} onPress={() => navigation.navigate('Completado')} >
-                            <Text style={styles.omitirTexto} >Omitir</Text>
-                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
         </KeyboardAvoidingView>
     );
-}
+
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -156,7 +161,7 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         color: "#fe6b8b",
         fontWeight: 'bold',
-        flex: 1,
+        marginBottom: 10,
     },
     botonesContainer: {
         flexDirection: 'row',
@@ -195,3 +200,5 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
 });
+
+export default RegistroAcompanante;

@@ -6,4 +6,7 @@ export class UpdateInvitadoDto {
 
     @ApiProperty({example: '1234567890', description: 'numero'})
     telefono?: string;
+
+    @ApiProperty({example: 4 , description: 'asistentes'})
+    asistentes?: number;
 }

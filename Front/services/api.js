@@ -1,16 +1,19 @@
 import axios from 'axios';
 
-export const registroInvitado = async (nombre, telefono) => {
+export const registroInvitado = async (nombre, telefono, asistentes) => {
     try {
         const response = await axios.post('http://localhost:3000/invitado/registar', {
             nombre,
             telefono,
+            asistentes,  
         });
         return response.data;
     } catch (error) {
         console.error(error);
+        throw error; 
     }
 };
+
 
 
 export const registrarAcompanante = async (data) => {
@@ -36,6 +39,26 @@ export const getInvitados = async () => {
         throw error.response?.data?.message || 'Error al obtener los invitados';
     }
 };
+
+export const getInvitado = async (id) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/invitado/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data?.message || 'Error al obtener datos.';
+    }
+};
+
+export const getIdPorNumero = async (telefono) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/invitado/porNumero/${telefono}`);
+        return response.data.id;
+    } catch (error) {
+        throw error.response?.data?.message || 'Error al obtener el ID.';
+    }
+};
+
+
 
 export const editarInvitado = async (id, data) => {
     try {

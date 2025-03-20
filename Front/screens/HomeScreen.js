@@ -8,13 +8,13 @@ export default function HomeScreen({ navigation }) {
                 <Text style={styles.texto}>Controla la información y accede a varias opciones para mantener un orden en tu fiesta.</Text>
                 <TouchableOpacity
                     style={styles.boton}
-                    onPress={() => navigation.navigate('Validate')}
+                    onPress={() => navigation.navigate('Validación')}
                 >
                     <Text style={styles.botonTexto}>Agregar invitado</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.boton}
-                    onPress={() => navigation.navigate('Lista')}
+                    onPress={() => navigation.navigate('Lista de invitados')}
                 >
                     <Text style={styles.botonTexto}>Lista de Invitados</Text>
                 </TouchableOpacity>
@@ -28,14 +28,14 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#F4F4F4',
+        backgroundColor: '#4e4e4e',
     },
     cardContainer: {
-        backgroundColor: 'white',
+        backgroundColor: '#848484',
         padding: 50,
         borderRadius: 10,
         alignItems: 'center',
-        width: 500,
+        width: 450,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
@@ -43,25 +43,27 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     titulo: {
-        fontSize: 34,
+        fontSize: 40,
         fontWeight: 'bold',
         marginBottom: 10,
         textAlign: 'center',
         fontWeight: '400',
+        color: '#fff'
     },
     texto: {
         fontSize: 20,
         marginBottom: 20,
         textAlign: 'center',
         fontWeight: '200',
+        color: '#fff'
     },
     boton: {
-        backgroundColor: '#FE6B8B',
+        backgroundColor: '#2c2c2c',
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 5,
         marginTop: 20,
-        width: 400,
+        width: 350,
         alignItems: 'center',
     },
 
