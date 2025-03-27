@@ -8,6 +8,8 @@ import PaginaFinal from './screens/PaginaFinal';
 import InicioScreen from './screens/InicioScreen';
 import Buscar from './screens/Buscar';
 import PaginaFinal2 from './screens/PaginaFinal2';
+import EditarInvitado from './screens/EditarInvitado';
+import PaginaFinal3 from './screens/PaginaFinal3';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +25,8 @@ export default function App() {
         <Stack.Screen name="Registro de acompañante" component={RegistroAcompanante} />
         <Stack.Screen name="Completado" component={PaginaFinal} />
         <Stack.Screen name="Confirmado" component={PaginaFinal2} />
+        <Stack.Screen name="Hecho" component={PaginaFinal3} />
+        <Stack.Screen name="Editar" component={EditarInvitado} />
       </Stack.Navigator>
     </NavigationContainer>
   );

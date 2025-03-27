@@ -7,14 +7,14 @@ export default function PaginaFinal() {
     useEffect(() => {
         Animated.timing(progress, {
             toValue: 0,
-            duration: 5000,
+            duration: 1000,
             useNativeDriver: false,
         }).start();
 
 
         const timer = setTimeout(() => {
             location.reload();
-        }, 5000);
+        }, 1000);
 
         return () => clearTimeout(timer);
     }, []);

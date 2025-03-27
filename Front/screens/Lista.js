@@ -6,7 +6,7 @@ import {
 import { getInvitados } from '../services/api';
 import { getAcompanantes } from '../services/api';
 
-export default function Lista() {
+export default function Lista({navigation}) {
     const [invitados, setInvitados] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -197,9 +197,11 @@ export default function Lista() {
                                     <TouchableOpacity onPress={() => handleDelete(selectedInvitado.id)} style={styles.deleteButton}>
                                         <Text style={styles.deleteButtonText}>Eliminar</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={styles.editButton}>
+
+                                    <TouchableOpacity onPress={() => navigation.replace('Editar', { id: selectedInvitado.id })} style={styles.editButton}>
                                         <Text style={styles.editButtonText}>Editar</Text>
                                     </TouchableOpacity>
+
                                     <TouchableOpacity onPress={() => setSelectedInvitado(null)} style={styles.closeButton}>
                                         <Text style={styles.closeButtonText}>Cerrar</Text>
                                     </TouchableOpacity>
@@ -292,7 +294,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        width: '30%',
+        width: '70%',
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 10,

@@ -49,52 +49,68 @@ const RegistroAcompanante = ({ route, navigation }) => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >
-            <View style={{ flex: 1 }}>
-                <View style={styles.container}>
-                    <View style={styles.cardcontainer}>
-                        <Text style={styles.titulo}>¡Estamos a pocos pasos!</Text>
-                        <Text style={styles.texto}>
-                            Añade a tus acompañantes. <Text style={{ color: '#FE6B8B', fontWeight: 'bold' }}>Escribe sus nombres.</Text>
-                        </Text>
-                        <Text style={styles.texto}>
-                            Puedes añadir hasta <Text style={{ color: '#4d4d4d', fontWeight: 'bold' }}>{asistentes}</Text> acompañantes.
-                        </Text>
-                        <View style={styles.inputContainer}>
-                            <View style={styles.inputRow}>
-                                <Text style={styles.label}>Tú</Text>
-                                <TextInput
-                                    style={styles.inputTu}
-                                    placeholder={route.params.nombre || "Tu Nombre"}
-                                    placeholderTextColor="#d1d1d1"
-                                    keyboardType="text"
-                                    editable={false}
-                                    aria-disabled
-                                />
-                            </View>
-                            {listaAcompanantes.map((asistente, index) => (
-                                <View key={index} style={styles.inputRow}>
-                                    <Text style={styles.label}>{index + 1}</Text>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <View style={{ flex: 1 }}>
+                    <View style={styles.container}>
+                        <View style={styles.cardcontainer}>
+                            <Text style={styles.titulo}>¡Estamos a pocos pasos!</Text>
+                            <Text style={styles.texto}>
+                                Añade a tus acompañantes.{' '}
+                                <Text style={{ color: '#FE6B8B', fontWeight: 'bold' }}>
+                                    Escribe sus nombres.
+                                </Text>
+                            </Text>
+                            <Text style={styles.texto}>
+                                Puedes añadir hasta{' '}
+                                <Text style={{ color: '#4d4d4d', fontWeight: 'bold' }}>
+                                    {asistentes}
+                                </Text>{' '}
+                                acompañantes.
+                            </Text>
+                            <View style={styles.inputContainer}>
+                                <View style={styles.inputRow}>
+                                    <Text style={styles.label}>Tú</Text>
                                     <TextInput
-                                        placeholder='Nombre completo'
-                                        placeholderTextColor={'#ffc4d1'}
-                                        value={asistente.nombre}
-                                        onChangeText={(value) => handleInputChange(index, value)}
-                                        style={styles.input}
+                                        style={styles.inputTu}
+                                        placeholder={route.params.nombre || 'Tu Nombre'}
+                                        placeholderTextColor="#d1d1d1"
+                                        keyboardType="text"
+                                        editable={false}
+                                        aria-disabled
                                     />
                                 </View>
-                            ))}
+                                {listaAcompanantes.map((asistente, index) => (
+                                    <View key={index} style={styles.inputRow}>
+                                        <Text style={styles.label}>{index + 1}</Text>
+                                        <TextInput
+                                            placeholder="Nombre completo"
+                                            placeholderTextColor={'#ffc4d1'}
+                                            value={asistente.nombre}
+                                            onChangeText={(value) => handleInputChange(index, value)}
+                                            style={styles.input}
+                                        />
+                                    </View>
+                                ))}
 
-                            <View style={styles.botonesContainer}>
-                                <TouchableOpacity style={styles.boton} onPress={handleRegistro} disabled={loading}>
-                                    <Text style={styles.botonTexto}>{loading ? 'Registrando...' : 'Confirmar'}</Text>
-                                </TouchableOpacity>
+                                <View style={styles.botonesContainer}>
+                                    <TouchableOpacity
+                                        style={styles.boton}
+                                        onPress={handleRegistro}
+                                        disabled={loading}
+                                    >
+                                        <Text style={styles.botonTexto}>
+                                            {loading ? 'Registrando...' : 'Confirmar'}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </KeyboardAvoidingView>
     );
+
 
 };
 
