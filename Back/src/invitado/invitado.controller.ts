@@ -28,7 +28,7 @@ export class InvitadoController {
     }
 
 
-    @Get()
+    @Get() //hola
     @ApiOperation({ summary: 'Obtener todos los invitados' })
     @ApiResponse({ status: 200, description: 'OK' })
     async findAll() {
